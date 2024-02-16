@@ -24,7 +24,7 @@ namespace CGFXLeaf.Data {
     /// </summary>
     public class CMDL {
         // The objects are declared in the same order they appear in the file.
-        public bool[] Flags;
+        public bool[] Flags;//bit 7: hasSkeletonSobj
         public uint Unk0;
         public string ModelName;
         public byte[] Unk1 = new byte[0x18];
@@ -42,7 +42,7 @@ namespace CGFXLeaf.Data {
         internal static CMDL Read(BinaryDataReader reader) {
             CMDL cmdl = new();
 
-            cmdl.Flags = reader.ReadBits(4);
+            cmdl.Flags = reader.ReadBits(4);//bit 7: hasSkeletonSobj
             Debug.Assert(reader.ReadString(4) == "CMDL"); // Magic check
             cmdl.Unk0 = reader.ReadUInt32();
 
@@ -130,16 +130,16 @@ namespace CGFXLeaf.Data {
     /// </summary>
     public class SOBJ {
         // The objects are declared in the same order they appear in the file.
+        public uint Flags;//bit 1: skeleton; bit 4: model
         public uint Unk0;
-        public uint Unk1;
         public string Name;
         
         internal static SOBJ Read(BinaryDataReader reader) {
             SOBJ obj = new();
 
-            obj.Unk0 = reader.ReadUInt32();
+            obj.Flags = reader.ReadUInt32();//bit 1: skeleton; bit 4: model
             Debug.Assert(reader.ReadString(4) == "SOBJ"); // Magic check
-            obj.Unk1 = reader.ReadUInt32();
+            obj.Unk0 = reader.ReadUInt32();
 
             using(reader.TemporarySeek()) {
                 reader.MoveToRelativeOffset();
